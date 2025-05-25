@@ -1,13 +1,28 @@
 import { Router } from "express";
-import { createTodo } from "../controllers/todo.controller.js";
+import {
+  createTodo,
+  getTodos,
+  updateTodo,
+  deleteTodo,
+  getSummary
+} from "../controllers/todo.controller.js";
+import firebaseAuth from '../middleware/firebaseAuth.js';
 
-const router=Router();
+const router = Router();
 
-router.get("/",(req,res)=>{
-res.send("your all todos sir!!");
-})
+// Get all todos for a user
+router.get("/", firebaseAuth, getTodos);
 
-router.post("/",createTodo);
+// Create a new todo
+router.post("/", firebaseAuth, createTodo);
 
+// Update a todo
+router.put("/:id", updateTodo);
+
+// Delete a todo
+router.delete("/:id", deleteTodo);
+
+// Get summary of pending todos for a user
+router.get("/summary", firebaseAuth, getSummary);
 
 export default router;
