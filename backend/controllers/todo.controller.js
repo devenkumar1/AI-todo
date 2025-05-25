@@ -1,5 +1,6 @@
 import { db } from '../config/firebase.config.js';
 import GenerateSummary from '../service/Gemini.js';
+import { sendToSlack } from '../service/slack.js';
 
 const todosCollection = 'todos';
 
@@ -113,6 +114,8 @@ export const getSummary = async (req, res) => {
       todos.push({ id: doc.id, ...doc.data() });
     });
     const summary = await GenerateSummary(todos);
+    // Send summary to Slack (do not await, so it doesn't block the response)
+    sendToSlack(`AI Todo Summary:\n${summary}`).catch(console.error);
     res.status(200).json({ summary, count: todos.length });
   } catch (err) {
     console.error('Error getting summary:', err);

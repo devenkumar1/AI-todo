@@ -1,6 +1,6 @@
 # AI Todo App
 
-A modern, full-stack Todo application with user authentication, built using React, Firebase Auth, and Firestore. Users can securely manage their todos, with real-time updates and a beautiful UI.User can get a quick summary of their pending tasks.
+A modern, full-stack Todo application with user authentication, built using React, Firebase Auth, and Firestore. Users can securely manage their todos, with real-time updates and a beautiful UI. User can get a quick summary of their pending tasks, powered by Google Gemini AI, and have the summary posted to a Slack channel.
 
 ---
 
@@ -8,6 +8,8 @@ A modern, full-stack Todo application with user authentication, built using Reac
 
 - **Frontend:** React, Tailwind CSS, Firebase Auth
 - **Backend:** Node.js, Express, Firebase Admin SDK, Firestore
+- **AI Summary:** Google Gemini API (Generative Language)
+- **Notifications:** Slack Incoming Webhooks
 - **Authentication:** Google & Email/Password (via Firebase Auth)
 - **Database:** Firestore (NoSQL, serverless)
 
@@ -20,6 +22,8 @@ A modern, full-stack Todo application with user authentication, built using Reac
 - Real-time updates
 - Responsive, modern UI
 - Protected routes
+- **AI-powered summary of pending todos (Gemini API)**
+- **Summary is posted to a Slack channel via webhook**
 
 ---
 
@@ -53,11 +57,32 @@ npm install
 - Download your Firebase Admin SDK service account key and place it in `backend/config/firebase.config.js`
 - Add your Firebase web config to `frontend/.env` (see `.env.example`)
 
-### 4. **Environment Variables**
-- Copy `.env.example` to `.env` in the frontend and fill in your Firebase credentials.
-- Backend uses the service account JSON directly in `firebase.config.js`.
+### 4. **Gemini API Setup**
+- Go to [Google AI Studio](https://aistudio.google.com/app/apikey) and create a Gemini API key.
+- Add it to your backend `.env` as `GEMINI_API_KEY=your_gemini_api_key`.
 
-### 5. **Run the App**
+### 5. **Slack Webhook Setup**
+- [Create a Slack workspace](https://slack.com/get-started#/create) if you don't have one.
+- [Create a Slack App and Incoming Webhook](https://api.slack.com/apps) for your workspace and channel.
+- Add the webhook URL to your backend `.env` as `SLACK_WEBHOOK_URL=your_webhook_url`.
+
+### 6. **Environment Variables (.env) for Backend**
+
+Add these variables to your `backend/.env`:
+
+```
+PORT=5000
+FIREBASE_PRIVATE_KEY="..."   # Your Firebase service account private key (escaped as described below)
+PRIVATE_KEY_ID=...
+CLIENT_ID=...
+GEMINI_API_KEY=...
+SLACK_WEBHOOK_URL=...
+```
+- `FIREBASE_PRIVATE_KEY` should be a single line, with `\n` for newlines, wrapped in double quotes.
+- `GEMINI_API_KEY` is your Google Gemini API key.
+- `SLACK_WEBHOOK_URL` is your Slack Incoming Webhook URL.
+
+### 7. **Run the App**
 
 #### Start Backend
 ```bash
@@ -90,6 +115,7 @@ ai-todo-app/
 │   ├── routes/
 │   ├── middleware/
 │   ├── config/
+│   ├── service/
 │   └── server.js
 └── frontend/
     ├── src/
