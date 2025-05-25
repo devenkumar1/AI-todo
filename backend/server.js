@@ -1,13 +1,15 @@
 import express from "express";
 import todoRoutes from './routes/todo.route.js'
 import cors from "cors";
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
