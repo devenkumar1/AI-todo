@@ -1,4 +1,5 @@
 import { db } from '../config/firebase.config.js';
+import GenerateSummary from '../service/Gemini.js';
 
 const todosCollection = 'todos';
 
@@ -98,7 +99,7 @@ export const deleteTodo = async (req, res) => {
   }
 };
 
-// Get summary of pending todos for a user
+//  summary 
 export const getSummary = async (req, res) => {
   const userId = req.userId;
   try {
@@ -111,7 +112,8 @@ export const getSummary = async (req, res) => {
     snapshot.forEach((doc) => {
       todos.push({ id: doc.id, ...doc.data() });
     });
-    res.status(200).json(todos);
+    const summary = await GenerateSummary(todos);
+    res.status(200).json({ summary, count: todos.length });
   } catch (err) {
     console.error('Error getting summary:', err);
     res.status(500).json({ message: 'Error getting summary', error: err.message });

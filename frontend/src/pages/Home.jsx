@@ -117,16 +117,15 @@ export default function Home() {
   };
 
   // Summary state
-  const [summary, setSummary] = useState([]);
+  const [summaryText, setSummaryText] = useState('');
+  const [showSummary, setShowSummary] = useState(false);
   const handleGetSummary = async () => {
     try {
-      const data = await todoService.getSummary();
-      setSummary(data);
-      if (data.length === 0) {
-        toast('No pending todos!');
-      } else {
-        toast.success(`You have ${data.length} pending todo(s).`);
-      }
+      const { summary, count } = await todoService.getSummary();
+      console.log('AI summary:', summary); // Debug log
+      setSummaryText(summary);
+      setShowSummary(true);
+      toast.success(`AI summary generated for ${count} pending todo(s).`);
     } catch (err) {
       toast.error('Failed to fetch summary');
     }
@@ -164,9 +163,23 @@ export default function Home() {
             onClick={handleGetSummary}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            Get Pending Summary
+            Get AI Summary
           </button>
         </div>
+        {showSummary && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+            <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
+              <h2 className="text-lg font-bold mb-2">AI Summary</h2>
+              <pre className="whitespace-pre-wrap text-gray-800">{summaryText ? summaryText : 'No summary available.'}</pre>
+              <button
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+                onClick={() => setShowSummary(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
         {error && (
           <div className="mb-6 bg-red-50 border-l-4 border-red-400 p-4">
             <div className="flex">
