@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { auth } from '../config/firebase';
 
-const API_URL = 'http://localhost:5000/todos';
+const API_URL =` ${import.meta.env.VITE_API_URL}/todos`;
 
 // Configure axios defaults
 axios.defaults.withCredentials = true;
